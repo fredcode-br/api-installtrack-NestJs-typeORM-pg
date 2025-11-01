@@ -15,7 +15,7 @@ import { FactoriesModule } from './factories/factories.module';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: false,
-      entities: [__dirname + '**/*.entity{.js,.ts}'],
+      entities: [__dirname + '/**/*.entity{.js,.ts}'],
     }),
     FactoriesModule,
   ],
