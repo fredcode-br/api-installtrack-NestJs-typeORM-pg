@@ -1,16 +1,16 @@
 import { Body, Controller, Get } from '@nestjs/common';
 import { FactoriesService } from './factories.service';
-// import { CreateFactoryDTO } from './dto/CreateFactory.dto';
-// import { FactoryEntity } from './factory.entity';
-// import { v4 as uuid } from 'uuid';
-import { Response } from 'express';
-// import { FactoriesRepository } from './factories.repository';
+import { CreateFactoryDTO } from './dto/CreateFactory.dto';
+import { FactoryEntity } from './factory.entity';
+import { v4 as uuid } from 'uuid';
+import { FactoriesRepository } from './factories.repository';
+import { FactoryListDTO } from './dto/FactoryListDTO';
 
 @Controller('factories')
 export class FactoriesController {
   constructor(
     private factoriesService: FactoriesService,
-    // private factoryRepository: FactoriesRepository,
+    private factoryRepository: FactoriesRepository,
   ) {}
 
   @Get()
@@ -20,17 +20,27 @@ export class FactoriesController {
     return savedFactories;
   }
 
-  // @Post()
-  // async createFactory(@Body() factoryData: CreateFactoryDTO) {
-  //   const factoryEntity = new FactoryEntity();
-  //   factoryEntity.id = uuid();
-  //   factoryEntity.name = factoryData.name;
-  //   factoryEntity.country = factoryData.country;
-  //   factoryEntity.state = factoryData.state;
-  //   factoryEntity.city = factoryData.city;
+  @Post()
+  async createFactory(@Body() factoryData: CreateFactoryDTO) {
+    const factory = new FactoryEntity();
 
-  //   this.factoryRepository.save(factoryEntity);
+    factory.id = uuid();
+    factory.name = factoryData.name;
+    factory.country = factoryData.country;
+    factory.state = factoryData.state;
+    factory.city = factoryData.city;
 
-  //   return 0;
-  // }
+    const createdFactory = this.factoryRepository.save(factory);
+
+    return {
+      factory: new FactoryListDTO(
+        createdFactory.id,
+        createdFactory.name,
+        createdFactory.country,
+        createdFactory.state,
+        createdFactory.city,
+      ),
+      message: 'Successfully created factory.',
+    };
+  }
 }
