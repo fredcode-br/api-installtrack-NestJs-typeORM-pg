@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { FactoriesModule } from './factories/factories.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FactoriesModule } from './factories/factories.module';
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
     }),
     FactoriesModule,
+    PermissionsModule,
   ],
   controllers: [],
   providers: [],
