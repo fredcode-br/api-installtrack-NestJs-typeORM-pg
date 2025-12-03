@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { FactoryEntity } from './factory.entity';
 
 @Injectable()
 export class FactoriesRepository {
-  private factories: FactoryEntity[] = [];
+  constructor(
+    @InjectRepository(FactoryEntity)
+    private readonly repository: Repository<FactoryEntity>,
+  ) {}
 
-  save(factory: FactoryEntity) {
-    this.factories.push(factory);
-    return factory;
+  async save(factory: FactoryEntity): Promise<FactoryEntity> {
+    return await this.repository.save(factory);
   }
 }

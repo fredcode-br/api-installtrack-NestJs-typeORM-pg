@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { FactoriesService } from './factories.service';
 import { CreateFactoryDTO } from './dto/CreateFactory.dto';
 import { FactoryEntity } from './factory.entity';
@@ -22,6 +22,8 @@ export class FactoriesController {
 
   @Post()
   async createFactory(@Body() factoryData: CreateFactoryDTO) {
+    console.log(factoryData);
+
     const factory = new FactoryEntity();
 
     factory.id = uuid();
@@ -30,7 +32,7 @@ export class FactoriesController {
     factory.state = factoryData.state;
     factory.city = factoryData.city;
 
-    const createdFactory = this.factoryRepository.save(factory);
+    const createdFactory = await this.factoryRepository.save(factory);
 
     return {
       factory: new FactoryListDTO(
