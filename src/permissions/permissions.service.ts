@@ -24,4 +24,22 @@ export class PermissionsService {
 
     return permissionsList;
   }
+
+  async findPermission(id: string) {
+    const savedPermission = await this.permissionRepository.findOneBy({
+      id,
+    });
+
+    if (!savedPermission) {
+      throw new Error('Permission not found');
+    }
+
+    const permission = new PermissionListDTO(
+      savedPermission.id,
+      savedPermission.name,
+      savedPermission.description,
+    );
+
+    return permission;
+  }
 }

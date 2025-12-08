@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { PermissionsRepository } from './permissions.repository';
 import { CreatePermissionDTO } from './dto/CreatePermission.dto';
@@ -18,6 +18,13 @@ export class PermissionsController {
     const savedPermissions = await this.permissionsService.findPermissions();
 
     return savedPermissions;
+  }
+
+  @Get('/:id')
+  async listPermissionById(@Param('id') id: string) {
+    const permission = await this.permissionsService.findPermission(id);
+
+    return permission;
   }
 
   @Post()
