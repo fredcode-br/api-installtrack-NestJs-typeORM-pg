@@ -1,17 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
-import { PermissionsRepository } from './permissions.repository';
 import { CreatePermissionDTO } from './dto/CreatePermission.dto';
 import { v4 as uuid } from 'uuid';
 import { PermissionEntity } from './permission.entity';
 import { PermissionListDTO } from './dto/PermissionList.dto';
+import { UpdatePermissionDTO } from './dto/UpdatePermission.dto';
 
 @Controller('permissions')
 export class PermissionsController {
-  constructor(
-    private permissionsService: PermissionsService,
-    private permissionsRepository: PermissionsRepository,
-  ) {}
+  constructor(private permissionsService: PermissionsService) {}
 
   @Get()
   async listPermissions() {
@@ -36,7 +33,7 @@ export class PermissionsController {
     permission.description = permissionData.description;
 
     console.log(permissionData);
-    const createdPermission = await this.permissionsRepository.save(permission);
+    const createdPermission = await this.permissionsService.create(permission);
 
     return {
       permission: new PermissionListDTO(
@@ -45,6 +42,22 @@ export class PermissionsController {
         createdPermission.description,
       ),
       message: 'Successfully created permission.',
+    };
+  }
+
+  @Put('/:id')
+  async updatePermission(
+    @Param('id') id: string,
+    @Body() permissionData: UpdatePermissionDTO,
+  ) {
+    const permissionChanged = await this.permissionsService.update(
+      id,
+      permissionData,
+    );
+
+    return {
+      mensagem: 'Permission changed successfully.',
+      produto: permissionChanged,
     };
   }
 }

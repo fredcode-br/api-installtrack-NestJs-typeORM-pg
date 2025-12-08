@@ -42,4 +42,27 @@ export class PermissionsService {
 
     return permission;
   }
+  async create(permissionData: PermissionEntity) {
+    return await this.permissionRepository.save(permissionData);
+  }
+
+  async update(id: string, permissionData: Partial<PermissionEntity>) {
+    await this.permissionRepository.update(id, permissionData);
+
+    const updatedPermission = await this.permissionRepository.findOne({
+      where: { id },
+    });
+
+    if (!updatedPermission) {
+      throw new Error('Permission not found');
+    }
+
+    const permission = new PermissionListDTO(
+      updatedPermission.id,
+      updatedPermission.name,
+      updatedPermission.description,
+    );
+
+    return permission;
+  }
 }
